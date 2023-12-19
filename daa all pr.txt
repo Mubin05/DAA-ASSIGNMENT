@@ -1,0 +1,951 @@
+												!!--------BINARY  SEARCH------!!!!!
+#include <stdio.h>
+int binary_search(int arr[], int key, int low, int high);
+int main() {
+  int n, a, i, j, temp, key;
+  printf("Enter the no of elements on the arrray \n");
+  scanf("%d", &n);
+  int arr[n];
+  printf("Enter the elements of the array \n");
+  for (i = 0; i < n; i++) {
+    scanf("%d", &arr[i]);
+  }
+  for (i = 0; i < n; i++) {
+    for (j = i + 1; j < n; j++) {
+      if (arr[i] > arr[j]) {
+        temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+    }
+  }
+  printf("The sorted array is \n");
+  for (i = 0; i < n; i++) {
+    printf(" %d ", arr[i]);
+  }
+  printf("\n");
+  printf("Enter your search element: \n");
+  scanf("%d", &key);
+  a = binary_search(arr, key, 0, n - 1);
+  if (a == -1)
+    printf("key not found in the array! \n");
+  else
+    printf("%d is found at index %d \n ", key, a + 1);
+}
+int binary_search(int arr[], int key, int low, int high) {
+  int mid = (low + high) / 2;
+  if (high >= low) {
+    if (arr[mid] == key) {
+      return mid;
+    } else if (arr[mid] > key) {
+      return binary_search(arr, key, low, mid - 1);
+    } else {
+      return binary_search(arr, key, mid + 1, high);
+    }
+  } else {
+    return -1;
+  }
+}
+
+
+
+
+
+
+
+												!!--------INSETION SORT-------!!!!!
+#include <stdio.h>
+void insertion_sort(int arr[], int n) {
+  int i, j, temp;
+  for (i = 1; i < n; i++) {
+    temp = arr[i];
+    j = i - 1;
+    while (j >= 0 && temp < arr[j]) {
+      arr[j + 1] = arr[j];
+      j--;
+    }
+    arr[j + 1] = temp;
+  }
+  printf("Sorted Array \n");
+  for (i = 0; i < n; i++) {
+    printf(" %d ", arr[i]);
+  }
+}
+int main() {
+  int n, i;
+  printf("enter the array size:\n");
+  scanf("%d", &n);
+  int arr[n];
+  printf("Enter the array values \n");
+  for (i = 0; i < n; i++) {
+    scanf("%d", &arr[i]);
+  }
+  insertion_sort(arr, n);
+}
+
+
+
+
+
+												!!--------QUICK SORT-------!!!!!
+#include<stdio.h>
+
+void quick_sort(int arr[], int low, int high);
+int partition(int arr[], int low, int high);
+
+int main() {
+  int n, i;
+  printf("Enter the array size: \n");
+  scanf("%d", &n);
+  int arr[n];
+  printf("Enter the array elements: \n");
+  for(i=0; i<n; i++) {
+    scanf("%d", &arr[i]);
+  }
+  quick_sort(arr, 0, n-1);
+  printf("The sorted array is: \n");
+  for(i=0; i<n; i++) {
+    printf(" %d ", arr[i]);
+  }
+}
+
+void quick_sort(int arr[], int low, int high) {
+  if (low < high) {
+    int q = partition(arr, low, high);
+    quick_sort(arr, low, q-1);
+    quick_sort(arr, q+1, high);
+  }
+}
+
+int partition(int arr[], int low, int high) {
+  int i, j;
+  int pivot = arr[high];
+  i = low - 1;
+  for (j = low; j < high; j++) {
+    if (arr[j] <= pivot) {
+      i++;
+      int temp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = temp;
+    }
+  }
+  int temp = arr[i+1];
+  arr[i+1] = arr[high];
+  arr[high] = temp;
+  return (i+1);
+}
+
+
+
+
+
+												!!--------MERGE SORT-------!!!!!
+#include <stdio.h>
+
+void merge_sort(int arr[], int low, int high);
+void merge(int arr[], int low, int mid, int high);
+int main() {
+  int n, i;
+  printf("Enter the array size\n");
+  scanf("%d", &n);
+  int arr[n];
+  printf("Enter the array elements:\n");
+  for (i = 0; i < n; i++) {
+    scanf("%d", &arr[i]);
+  }
+  merge_sort(arr, 0, n - 1);
+  printf("The sorted array is:\n");
+  for (i = 0; i < n; i++) {
+    printf(" %d ", arr[i]);
+  }
+  return 0;
+}
+void merge_sort(int arr[], int low, int high) {
+  if (low < high) {
+    int mid = (low + high) / 2;
+    merge_sort(arr, low, mid);
+    merge_sort(arr, mid + 1, high);
+    merge(arr, low, mid, high);
+  }
+}
+void merge(int arr[], int low, int mid, int high) {
+  int i, j, k, n1, n2;
+  n1 = mid - low + 1;
+  n2 = high - mid;
+  int l1[n1], l2[n2];
+  for (i = 0; i < n1; i++) {
+    l1[i] = arr[low + i];
+  }
+  for (j = 0; j < n2; j++) {
+    l2[j] = arr[mid + j + 1];
+  }
+  i = 0, j = 0;
+  k = low;
+  while (i < n1 && j < n2) {
+    if (l1[i] < l2[j]) {
+      arr[k] = l1[i];
+      i++;
+    } else {
+      arr[k] = l2[j];
+      j++;
+    }
+    k++;
+  }
+  while (i < n1) {
+    arr[k] = l1[i];
+    i++;
+    k++;
+  }
+  while (j < n2) {
+    arr[k] = l2[j];
+    j++;
+    k++;
+  }
+}
+
+
+
+												!!--------MAX-HEAPIFY-------!!!!!
+#include <stdio.h>
+void create_max_heap(int arr[], int n);
+void max_heapify(int arr[], int n, int i);
+int main() {
+  int n, i;
+  printf("Enter the array size\n");
+  scanf("%d", &n);
+  int arr[n];
+  printf("Enter the array elements\n");
+  for (i = 0; i < n; i++) {
+    scanf("%d", &arr[i]);
+  }
+  printf("The array is\n");
+  for (i = 0; i < n; i++) {
+    printf("%d ", arr[i]);
+  }
+  printf("\n");
+  create_max_heap(arr, n);
+  printf("The max heap is:\n");
+  for (i = 0; i < n; i++) {
+    printf("%d ", arr[i]);
+  }
+}
+void create_max_heap(int arr[], int n) {
+	int i;
+  int lnl = (n - 1) / 2;
+  for (i = lnl; i >= 0; i--)
+   {
+    max_heapify(arr, n, i);
+  }
+}
+void max_heapify(int arr[], int n, int i) {
+  int lc, rc, largest;
+  lc = 2 * i + 1;
+  rc = 2 * i + 2;
+  if (lc < n && arr[lc] > arr[i]) {
+    largest = lc;
+  } else {
+    largest = i;
+  }
+  if (rc < n && arr[rc] > arr[largest]) {
+    largest = rc;
+  }
+  if (largest != i) {
+    int temp = arr[i];
+    arr[i] = arr[largest];
+    arr[largest] = temp;
+    max_heapify(arr, n, largest);
+  }
+}
+
+
+
+
+
+												!!--------EXTRACT MAX ELEMENT-------!!!!!
+#include <stdio.h>
+
+int extract_max_ele(int arr[], int *n);
+void max_heapify(int arr[], int n, int i);
+
+int main() {
+  int n, i;
+  printf("Enter the array size: ");
+  scanf("%d", &n);
+  int arr[n];
+  printf("Enter the array elements: ");
+  for (i = 0; i < n; i++) {
+    scanf("%d", &arr[i]);
+  }
+  printf("The array is: ");
+  for (i = 0; i < n; i++) {
+    printf("%d ", arr[i]);
+  }
+  printf("\n");
+  while (n > 0) {
+    int max = extract_max_ele(arr, &n);
+    printf("Extracted max element: %d\n", max);
+  }
+  return 0;
+}
+
+int extract_max_ele(int arr[], int *n) {
+  if (*n <= 0) {
+    printf("Heap is empty\n");
+    return -1; // Indicate heap is empty with a negative value
+  }
+  int max = arr[0];
+  arr[0] = arr[(*n) - 1];
+  (*n)--;
+  max_heapify(arr, *n, 0);
+  return max;
+}
+
+void max_heapify(int arr[], int n, int i) {
+  int lc, rc, largest;
+  lc = 2 * i + 1;
+  rc = 2 * i + 2;
+  if (lc < n && arr[lc] > arr[i]) {
+    largest = lc;
+  } else {
+    largest = i;
+  }
+  if (rc < n && arr[rc] > arr[largest]) {
+    largest = rc;
+  }
+  if (largest != i) {
+    int temp = arr[i];
+    arr[i] = arr[largest];
+    arr[largest] = temp;
+    max_heapify(arr, n, largest);
+  }
+}
+
+
+
+
+												!!--------OPERATION'S ON HEAP-------!!!!!
+#include <stdio.h>
+#include <stdlib.h>
+int n = 0;
+void create_max_heap(int arr[]);
+void increase_key(int arr[]);
+void insert_key(int arr[]);
+void decrease_key(int arr[]);
+void delete_key(int arr[]);
+void heap_sort(int arr[]);
+void display(int arr[]);
+void max_heapify(int arr[], int id);
+void increase(int arr[], int id, int key);
+int main() {
+  int ch = 0, arr[20];
+  while (ch != 7) {
+    printf("Please Select \n");
+    printf(
+        "\n1.Create Max Heap\n2.Increase Key\n3.Insert in max heap\n4.Decrease "
+        "Key\n5.Delete from max heap\n6.Heap Sort\n7.Exit\n");
+    scanf("%d", &ch);
+    printf("\n");
+    switch (ch) {
+    case 1:
+      create_max_heap(arr);
+      break;
+    case 2:
+      increase_key(arr);
+      break;
+    case 3:
+      insert_key(arr);
+      break;
+    case 4:
+      decrease_key(arr);
+      break;
+    case 5:
+      delete_key(arr);
+      break;
+    case 6:
+      heap_sort(arr);
+      break;
+    case 7:
+      exit(0);
+    default:
+      printf("Invalid Choice\n");
+    }
+  }
+  return 0;
+}
+void create_max_heap(int arr[]) {
+	int i;
+  printf("Enter the array size \n");
+  scanf("%d", &n);
+  printf("Enter the array elements \n");
+  for ( i = 0; i < n; i++) {
+    scanf("%d", &arr[i]);
+  }
+  printf("The array is:\n");
+  display(arr);
+  int last_non_leaf = (n - 1) / 2;
+  for (i = last_non_leaf; i >= 0; i--) {
+    max_heapify(arr, i);
+  }
+  printf("The heap is:\n");
+  display(arr);
+}
+void increase_key(int arr[]) {
+  int id = 0, key = 0;
+  printf("Enter the index of the element to be increased:");
+  scanf("%d", &id);
+  printf("Enter the key");
+  scanf("%d", &key);
+  printf("\n");
+  increase(arr, id, key);
+  printf("The heap after increasing key:\n");
+  display(arr);
+}
+void insert_key(int arr[]) {
+  int key = 0;
+  printf("Enter the key to be inserted:\n");
+  scanf("%d", &key);
+  printf("\n");
+  n++;
+  arr[n - 1] = -99999;
+  int id = n - 1;
+  increase(arr, id, key);
+  printf("After insertion the heap is:\n");
+  display(arr);
+}
+void decrease_key(int arr[]) {
+  int id = 0, key = 0;
+  printf("Enter the index of the element to be decreased:\n");
+  scanf("%d", &id);
+  printf("Enter the key\n");
+  scanf("%d", &key);
+  printf("\n");
+  if (arr[id] < key) {
+    printf("Error: The node is already lesser than the key\n");
+    return;
+  }
+  arr[id] = key;
+  max_heapify(arr, id);
+  printf("The heap after decreasing key:\n");
+  display(arr);
+}
+void delete_key(int arr[]) {
+  int id = 0;
+  printf("Enter the index of the key to be deleted\n");
+  scanf("%d", &id);
+  printf("\n");
+  int del_ele = arr[id];
+  arr[id] = arr[n - 1];
+  n--;
+  max_heapify(arr, id);
+  printf("%d deleted \n", del_ele);
+  printf("The heap after deletion:\n");
+  display(arr);
+}
+void display(int arr[]) {
+	int i;
+  for ( i = 0; i < n; i++) {
+    printf(" %d ", arr[i]);
+  }
+  printf("\n");
+}
+void heap_sort(int arr[]) {
+  int copy = n,i;
+  for (i = n - 1; i >= 1; i--) {
+    int temp = arr[0];
+    arr[0] = arr[i];
+    arr[i] = temp;
+    n--;
+    max_heapify(arr, 0);
+  }
+  n = copy;
+  printf("The sorted array is:\n");
+  display(arr);
+}
+void max_heapify(int arr[], int i) {
+  int lc, rc, largest;
+  lc = 2 * i + 1;
+  rc = 2 * i + 2;
+  if (lc < n && arr[lc] > arr[i]) {
+    largest = lc;
+  } else {
+    largest = i;
+  }
+  if (rc < n && arr[rc] > arr[largest]) {
+    largest = rc;
+  }
+  if (largest != i) {
+    int temp = arr[i];
+    arr[i] = arr[largest];
+    arr[largest] = temp;
+    max_heapify(arr, largest);
+  }
+}
+void increase(int arr[], int id, int key) {
+  if (arr[id] > key) {
+    printf("Error: The node is already greater than the key\n");
+    return;
+  }
+  arr[id] = key;
+  while (id > 0 && arr[(id - 1) / 2] < arr[id]) {
+    int temp = arr[(id - 1) / 2];
+    arr[(id - 1) / 2] = arr[id];
+    arr[id] = temp;
+    id = (id - 1) / 2;
+  }
+}
+
+
+
+
+
+
+												!!--------MATRIX MULTIPLICATION ITERATIVE-------!!!!!
+#import mul for large dim
+import numpy as np
+
+
+def split(mat):
+  r, c = mat.shape
+  r2, c2 = r // 2, c // 2
+  return mat[:r2, :c2], mat[:r2, c2:], mat[r2:, :c2], mat[r2:, c2:]
+
+
+def mm(A, B):
+  if len(A) == 1:
+    return A * B
+  a, b, c, d = split(A)
+  e, f, g, h = split(B)
+  c11 = mm(a, e) + mm(b, g)
+  c12 = mm(a, f) + mm(b, h)
+  c21 = mm(c, e) + mm(d, g)
+  c22 = mm(c, f) + mm(d, h)
+  c = np.vstack([np.hstack([c11, c12]), np.hstack([c21, c22])])
+  return c
+
+
+def printf(mat):
+  r, c = mat.shape
+  for i in range(c):
+    for j in range(c):
+      print(mat[i, j], end=' ')
+    print()
+  print()
+
+
+def readmat():
+  r = int(input("Enter the number of rows:"))
+  c = int(input("Enter the number of columns"))
+  print("Enter the matrix elements")
+  elems = list(map(int, input().split()))
+  mat = np.array(elems).reshape(r, c)
+  print(mat)
+  return mat
+
+
+A = readmat()
+B = readmat()
+print("The resultant matrix is:")
+C = mm(A, B)
+printf(C)
+
+
+
+
+
+
+
+
+												!!--------STRASSEN MATRIX MULTIPLICATION -------!!!!!
+
+#import mul for large dim
+import numpy as np
+
+
+def split(mat):
+  r, c = mat.shape
+  r2, c2 = r // 2, c // 2
+  return mat[:r2, :c2], mat[:r2, c2:], mat[r2:, :c2], mat[r2:, c2:]
+
+
+def mm(A, B):
+  if len(A) == 1:
+    return A * B
+  a, b, c, d = split(A)
+  e, f, g, h = split(B)
+  c11 = mm(a, e) + mm(b, g)
+  c12 = mm(a, f) + mm(b, h)
+  c21 = mm(c, e) + mm(d, g)
+  c22 = mm(c, f) + mm(d, h)
+  c = np.vstack([np.hstack([c11, c12]), np.hstack([c21, c22])])
+  return c
+
+
+def printf(mat):
+  r, c = mat.shape
+  for i in range(c):
+    for j in range(c):
+      print(mat[i, j], end=' ')
+    print()
+  print()
+
+
+def readmat():
+  r = int(input("Enter the number of rows:"))
+  c = int(input("Enter the number of columns"))
+  print("Enter the matrix elements")
+  elems = list(map(int, input().split()))
+  mat = np.array(elems).reshape(r, c)
+  print(mat)
+  return mat
+
+
+A = readmat()
+B = readmat()
+print("The resultant matrix is:")
+C = mm(A, B)
+printf(C)
+
+
+
+
+
+
+
+												!!--------KNAPSACK -------!!!!!
+
+#include <stdio.h>
+#include <stdlib.h>
+void knapsack(float w[], float p[], int n, int m);
+int main() {
+    int m, n, i;
+    printf("enter max wt of knapsack: ");
+    scanf("%d", &m);
+    printf("\nenter no. of objects: ");
+    scanf("%d", &n);
+    float w[n], p[n];
+    printf("enter weights\n");
+    for (i = 0; i < n; i++) {
+        printf("w[%d]= ", i);
+        scanf("%f", &w[i]);
+    }
+    printf("\nenter profits\n");
+    for (i = 0; i < n; i++) {
+        printf("p[%d]= ", i);
+        scanf("%f", &p[i]);
+    }
+    knapsack(w, p, n, m);
+    return 0;
+}
+void knapsack(float w[], float p[], int n, int m) {
+    int i, j;
+    float cal[n], x[n], prof = 0;
+    int wt = 0, k = 0;
+    for (i = 0; i < n; i++) {
+        x[i] = 0;
+    }
+    for (i = 0; i < n; i++) {
+        cal[i] = p[i] / w[i];
+    }
+    for (i = 0; i < n; i++) {
+        for (j = i + 1; j < n; j++) {
+            if (cal[i] < cal[j]) {
+                float t1 = cal[i], t2 = w[i], t3 = p[i];
+                cal[i] = cal[j];
+                w[i] = w[j];
+                p[i] = p[j];
+                cal[j] = t1;
+                w[j] = t2;
+                p[j] = t3;
+            }
+        }
+    }
+    printf("\n\n p[i]\t\t w[i]\t\t cal[i]\n");
+    for (i = 0; i < n; i++) {
+        printf("%f\t %f\t %f\t\n", p[i], w[i], cal[i]);
+    }
+    for (i = 0; i < n; i++) {
+        if ((wt + w[i]) <= m) {
+            k++;
+            x[i] = 1;
+            wt += w[i];
+            prof += (x[i] * p[i]);
+            p[i] = (x[i] * p[i]);
+        } else {
+            break;
+        }
+    }
+    printf("\nthe selected wts are: \n");
+    for (i = 0; i < k; i++) {
+        printf("%d\t%f\t%f\n", i + 1, w[i], p[i]);
+    }
+    printf("\n the total profit is %f\n",prof);
+}
+
+
+
+
+
+
+
+												!!--------DIJKSTRA-------!!!!!
+#include <stdio.h>
+void dijkstra(int G[100][100], int n, int source);
+void relax(int u, int v, int w[100][100], int dist[]);
+int extract_min(int p[], int dist[], int n);
+int main() {
+  int G[100][100];
+  int n, source,i,j;
+  printf("Enter the number of vertices:");
+  scanf("%d", &n);
+  printf("Enter the adjacence matrix (%d x %d):\n", n, n);
+  for ( i = 0; i < n; i++) {
+    for (j = 0; j < n; j++) {
+      scanf("%d", &G[i][j]);
+    }
+  }
+  printf("Enter the source vertex:");
+  scanf("%d", &source);
+  dijkstra(G, n, source);
+  return 0;
+}
+void dijkstra(int G[100][100], int n, int source) {
+  int distance[100];
+  int visited[100];
+  int i,v;
+  for (i = 0; i < n; i++) {
+    distance[i] = 9999;
+    visited[i] = 0;
+  }
+  distance[source] = 0;
+  for (i = 0; i < n; i++) {
+    int u = extract_min(distance, visited, n);
+    visited[u] = 1;
+    for (v = 0; v < n; v++) {
+      if (!visited[v] && G[u][v] != -1)
+        relax(u, v, G, distance);
+    }
+  }
+  printf("Vertex \t Distance from Source \n");
+  for (i = 0; i < n; i++) {
+    printf("%d \t\t %d \n", i, distance[i]);
+  }
+}
+void relax(int u, int v, int w[100][100], int dist[]) {
+  if (w[u][v] + dist[u] < dist[v]) {
+    dist[v] = w[u][v] + dist[u];
+  }
+}
+int extract_min(int visited[], int dist[], int n) {
+  int min = 99999;
+  int min_index = -1;
+  int i;
+  for (i = 0; i < n; i++) {
+    if (visited[i] == 0 && dist[i] < min) {
+      min = dist[i];
+      min_index = i;
+    }
+  }
+  return min_index;
+}
+
+
+
+
+
+												!!--------PRIIMS-------!!!!!
+
+import numpy as np
+
+INFINITY = 99999
+
+N = int(input("Enter the no of vertices"))
+print("Enter the elemnts of the matrix")
+elems = list(map(int, input().split()))
+G = np.array(elems).reshape(N, N)
+print(G)
+visited = [0, 0, 0, 0, 0, 0, 0]
+no_edges = 0
+visited[0] = True
+mincost = 0
+while no_edges < N - 1:
+    min = INFINITY
+    u = 0
+    v = 0
+    for i in range(N):
+        if visited[i]:
+            for j in range(N):
+                if (not visited[j] and G[i][j]):
+                    if min > G[i][j]:
+                        min = G[i][j]
+                        u = i
+                        v = j
+    print(str(u + 1) + "->" + str(v + 1) + ":" + str(G[u][v]))
+    visited[v] = True
+    mincost = mincost + G[u][v]
+    no_edges = no_edges + 1
+print("Minimum cost is:", mincost)
+
+
+
+												!!--------LCS-------!!!!!
+def lcs(X, Y):
+  m = len(X)
+  n = len(Y)
+  C = [[None] * (n + 1) for i in range(m + 1)]
+  for i in range(m + 1):
+    for j in range(n + 1):
+      if i == 0 or j == 0:
+        C[i][j] = 0
+      elif X[i - 1] == Y[j - 1]:
+        C[i][j] = C[i - 1][j - 1] + 1
+      else:
+        C[i][j] = max(C[i - 1][j], C[i][j - 1])
+
+  for i in range(m + 1):
+    for j in range(n + 1):
+      print(C[i][j], end=" ")
+    print()
+  print()
+  return C[m][n]
+
+
+X = input("enter the 1st string:")
+print("1st string:", X)
+Y = input("enter the 2nd string:")
+print("2nd string:", Y)
+print("Length of LCS is", lcs(X, Y))
+
+
+
+
+
+
+
+												!!--------ALL LCS SEQUENCE-------!!!
+def print_all_subsequences(X, Y, C):
+  m = len(X)
+  n = len(Y)
+
+  all_subsequences = set()
+  LCS = [''] * (C[m][n] + 1)
+
+  def find_all_subsequences(i, j, id):
+      nonlocal LCS
+      if i == 0 or j == 0:
+          all_subsequences.add(''.join(LCS[id:]))
+          return
+      if X[i - 1] == Y[j - 1]:
+          LCS[id - 1] = X[i - 1]
+          find_all_subsequences(i - 1, j - 1, id - 1)
+      if C[i - 1][j] >= C[i][j - 1]:
+          find_all_subsequences(i - 1, j, id)
+      if C[i][j - 1] >= C[i - 1][j]:
+          find_all_subsequences(i, j - 1, id)
+
+  find_all_subsequences(m, n, C[m][n])
+  filtered_subsequences = [i for i in all_subsequences if len(i) == 4]
+  print("All LCS sequences:", filtered_subsequences)
+  print("Length of LCS is",C[m][n])
+X = input("Enter the 1st string: ")
+print("1st string:", X)
+Y = input("Enter the 2nd string: ")
+print("2nd string:", Y)
+m = len(X)
+n = len(Y)
+C = [[0] * (n + 1) for _ in range(m + 1)]
+for i in range(1, m + 1):
+  for j in range(1, n + 1):
+      if X[i - 1] == Y[j - 1]:
+          C[i][j] = C[i - 1][j - 1] + 1
+      else:
+          C[i][j] = max(C[i - 1][j], C[i][j - 1])
+
+print("The matrix is below:")
+for i in range(m + 1):
+  for j in range(n + 1):
+      print(C[i][j], end=" ")
+  print()
+print()
+print_all_subsequences(X,Y,C)
+
+
+
+
+												!!--------MATRIX CHAIN MULTIPLICATION-------!!!
+def print_mat(m):
+  for i in m:
+    print(i)
+
+def matrix_chain_mul(p):
+  n=len(p)-1
+  mat_val=999999
+  m=[[0 for x in range(n)]for x in range(n)]
+  s=[[0 for x in range(n)]for x in range(n)]
+  for i in range(0,n):
+    j = i
+    m[i][j]=0
+  for L in range(2,n+1):
+    for i in range(0,n-L+1):
+      j=i+L-1
+      max_val = float('inf')
+      m[i][j]=max_val
+      for k in range(i,j):
+        q=m[i][k]+m[k+1][j]+p[i]*p[k+1]*p[j+1]
+        if q<m[i][j]:
+          m[i][j]=q
+          s[i][j]=k
+  mp=[[m[i][j] for i in range(0,n)]]
+  for l in range(1,n):
+    temp=[m[i][i+l] for i in range(0,n-l)]
+    mp.append(temp)
+  print("\n Matrix M:")
+  print_mat(mp)
+  sp=[]
+  for l in range(1,n):
+    temp=[[s[i][i+l] for i in range(0,n-l)]]
+    sp.append(temp)
+  print("\n Matrix S:")
+  print_mat(sp)
+  return m[0][n-1]
+n1=int(input("Enter the no of dims:"))
+p=[]
+print("Enter dims")
+for i in range(n1):
+  l1=int(input())
+  p.append(l1)
+print("The dim array:",p)
+result=matrix_chain_mul(p)
+print("result:",result)
+
+
+
+
+
+
+
+												!!--------KNAPSACK  0/1 USING DP-------!!!
+
+def knapsack_01(weights, profits, capacity):
+    n = len(profits)
+    dp = [[0 for _ in range(capacity + 1)] for _ in range(n + 1)]
+
+    for i in range(n + 1):
+        for w in range(capacity + 1):
+            if i == 0 or w == 0:
+                dp[i][w] = 0
+            elif weights[i - 1] <= w:
+                dp[i][w] = max(profits[i - 1] + dp[i - 1][w - weights[i - 1]], dp[i - 1][w])
+            else:
+                dp[i][w] = dp[i - 1][w]
+    for row in dp:
+        print(row)
+
+    return dp[n][capacity]
+n = int(input("Enter the number of items: "))
+weights = list(map(int, input("Enter the weights of the items: ").split()))
+profits = list(map(int, input("Enter the profits of the items: ").split()))
+capacity = int(input("Enter the capacity of the knapsack: "))
+
+max_value = knapsack_01(weights, profits, capacity)
+print("The maximum value that can be obtained:", max_value)
+
