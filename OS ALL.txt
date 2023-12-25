@@ -1,0 +1,371 @@
+			!!!!!!!------bash program to add two numbers-------!!!!!!!!
+read -p "Enter the  first number:" num1
+read -p "Enter the second number:" num2
+sum=`expr $num1 + $num2`
+echo "Sum is: $sum"
+
+
+			!!!!!!!------bash program to check if a no is odd or even-------!!!!!!!!
+
+read -p  "Enter the number:" num
+r=`expr $num % 2`
+if [ $r -eq 0 ]
+then 
+    echo "$num is even no"
+else
+    echo "$num is odd no"
+fi
+
+
+			!!!!!!!------bash program to check if prime or not-------!!!!!!!!
+read -p  "Enter the number:" num
+for((i=2;i<=num/2;i++))
+do
+    if [ $((num % i )) -eq 0 ]
+    then
+        echo "$num is not a prime number"
+        exit
+    fi
+done
+echo "$num is a prime nummber"
+
+			!!!!!!!------bash program to check prime no within a range-------!!!!!!!!
+ 
+read -p  "Enter the upper limit:" n
+read -p "Enter the lower limit:" m
+echo "Prime numbers between $n and $m are:"
+for((i=n;i<=m;i++)) # start from m and end at n
+do
+    cct=0
+    for((j=2;j*j<i+1;j++)) # check all the factors from 2 to sqrt(i)
+    do
+        if [[ $i%$j -eq 0 ]]; # if i is divisible by j
+        then
+            cct=1 # set the flag to 1
+            break # exit the loop
+        fi
+    done
+    if [[ cct -eq 0 ]]; # if the flag is 0
+    then
+        echo "prime number: $i " # print i as a prime number
+    fi
+done
+
+			!!!!!!!------bash program to swap two numbers------!!!!!!!!
+read -p "Enter the first no: " a
+read -p "Enter the second no: " b
+echo "The first no before swapping is $a"
+echo "Thee second number before swapping is $b"
+temp=$a
+a=$b
+b=$temp
+echo "The first no after swapping is $a"
+echo "Thee second number after swapping is $b"
+
+
+
+			!!!!!!!------bash program to convert celcius into fahrenheit------!!!!!!!!
+echo "Enter the temperature in celcius"
+read C
+F=$(echo "scale=2;$C*1.8+32" | bc)
+echo "The temperature in Fahrenheit is $F"
+
+
+
+
+
+			!!!!!!!------parent child relation fork system calll------!!!!!!!!
+#include<stdio.h>
+#include<unistd.h>
+int main()
+{
+    int pr_id=fork();
+    if((pr_id==0) // child process
+    {
+        printf("\n from child with pid=%d,ppid=%d and fork return value=%d\n",getpid(),getppid(),pr_id);
+    }
+    else if(pr_id>0) // parent process
+    {
+        printf("\n from parent with pid=%d,ppid=%d and fork return value=%d\n",getpid(),getppid(),pr_id);
+    }
+    else // fork failed
+    {
+        printf("\n fork failed with pid=%d,ppid=%d and fork return value=%d\n",getpid(),getppid(),pr_id);
+    }
+}
+
+
+
+
+			!!!!!!!------distinguish parent from child ------!!!!!!!!
+#include<stdio.h>
+#include<unistd.h>
+int main()
+{
+    int pr_id=fork();
+    if((pr_id==0) // child process
+    {
+        printf("\n from child process");
+    }
+    else
+    {
+        printf("\n from parent process\n the process identifier of the child is %d\n",pid);
+    }
+}
+
+
+
+
+
+
+
+ 			!!!!!!!------demonstratee the use of getpid() function ------!!!!!!!!
+#include<stdio.h>
+#include<unistd.h>
+int main()
+{
+    printf("The process identifier of the parent process is %d\n",(int)getpid());
+    int pid=fork();
+    if(pid==0)
+    {
+        printf("After the fork the process iddentifier of the child is %d\n",(int)getpid());
+        
+    }
+    else
+    {
+        printf("After the fork,the parent is still %d\n -fork returned %d\n",(int)getpid(),pid);
+    }
+}
+
+
+
+
+
+
+			!!!!!!!------distinguish parent from child ------!!!!!!!!
+#include<stdio.h>
+#include<unistd.h>
+
+#include<sys/types.h>
+#define MAX_COUNT 5
+void childProcess();
+void ParentProcess();
+
+void main()
+
+{
+   int pid=fork();
+    if(pid==0)
+        childProcess();
+    else
+        ParentProcess();
+
+    
+}
+void childProcess()
+{
+    int i;
+    for(i=1;i<=MAX_COUNT;i++)
+    {
+        printf("This line is from child,value=%d\n",i);
+    }
+    printf("-----Child Process is done------");
+}
+void ParentProcess()
+{
+    int i;
+    for(i=1;i<=MAX_COUNT;i++)
+    {
+        printf("This line is from Parent,value=%d\n",i);
+    }
+    printf("-----Parent Process is done------");
+}
+
+
+
+
+               ________combing fork and exe-------------------
+
+#include<stdio.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<stdlib.h>
+#include<sys/wait.h>
+int main()
+{
+    char* argv[3]={"Command-Line",".",NULL};
+    int pid=fork();
+    if(pid==0)
+    {
+        execvp("find",argv);
+    }
+    printf("Finished evecuting the parent process\n the child the child process won't get you here ");
+    return 0;
+}
+
+
+
+                    --------------------round robbin---------------------
+#include<stdio.h>
+#include<stdlib.h>
+struct rr{
+    int pno,btime,stime,wtime,lst; // added semicolon
+};
+int p[10];
+int main()
+{
+    int pp=-1,ts,flag,count,ptm=0,i,n,twt=0,tottimme=0; // added comma, fixed typo
+    printf("\n Round Robin Scheduling");
+    printf("Enter the no of processes");
+    scanf("%d",&n);
+    printf("Enter the time slice:");
+    scanf("%d",&ts);
+    printf("Enter the burst time:");
+    for(i=0;i<n;i++) // fixed i = 0
+    {
+        printf("\n process %d \t",i+1); // added semicolon
+        scanf("%d",&p[i].btime);
+        p[i].wtime=p[i].lst=0;
+        p[i].pno=i+1;
+        p[i].sbtime=p[i].btime;
+    }
+    printf("Scheduling...\n");
+    do
+    {
+        flag=0;
+        for(int i=0;i<n;i++)
+        {
+            count=p[i].btime;
+            if(count>0)
+            {
+                flag=-1;
+                count=(count>=ts)?ts:count;
+                printf("\n process %d",p[i].pno);
+                printf("from %d",ptm);
+                ptm+=count;
+                printf("to %d",ptm);
+                p[i].btime=count;
+                if(pp!=i)
+                {
+                    pp=i;
+                    p[i].wtime+=ptm-p[i].lts-count;
+                    p[i].lts=ptm;
+                }
+            }
+        }
+    } while(flag != 0); // added closing bracket
+}
+
+
+
+
+                    --------------------FCFS---------------------
+#include<stdio.h>
+int main()
+{
+    int pid[15];
+    int bt[15];
+    int n;
+    printf("Enter the number of proceesses:");
+scanf("%d",&n);
+    printf("Enter the process id of all the proceses:");
+    for(int i=0;i<n;i++)
+    {
+        scanf("%d",&pid[i]);
+        
+    }
+    printf("Enter the burst time for all the processes");
+     for(int i=0;i<n;i++)
+    {
+        scanf("%d",&bt[i]);
+        
+    }
+    int i,wt[n];
+    wt[0]=0;
+    for(i=1;i<n;i++)
+    {
+        wt[i]=bt[i-1]+wt[i-1];
+        
+    }
+    printf("Process Id \t BURST TIME \t WAITING TIME \t TURN AROUND TIME\n");
+    float twt=0.0;
+    float tat=0.0;
+    for(i=0;i<n;i++)
+    {
+        printf("%d \t \t",pid[i]);
+        printf("%d \t \t",bt[i]);
+        printf("%d \t \t",wt[i]);
+        printf("%d \t \t",bt[i]+wt[i]);
+        printf("\n");
+        twt+=wt[i];
+        tat+=(wt[i]+bt[i]);
+    }
+    float att,awt;
+    awt=twt/n;
+    att=tat/n;
+    printf("Avg. waiting time= %f \n",awt);
+    printf("Avg. turnaround time= %f \n",att);
+}
+
+
+                    --------------------SJF---------------------
+
+#include<stdio.h>
+int main()
+{
+    int bt[20],p[20],wt[20],tat[20],i,j,n,total=0,totalT=0,pos,temp;
+    float avg_wt,avg_tat;
+    printf("Enter the number of proceesses:");
+    scanf("%d",&n);
+    printf("Enter the process id of all the proceses:");
+    // for(int i=0;i<n;i++)
+    // {
+    //     scanf("%d",&pid[i]);
+        
+    // }
+    printf("Enter the burst time for all the processes");
+     for(int i=0;i<n;i++)
+    {
+        printf("p %d:",i+1);
+        scanf("%d",&bt[i]);
+        p[i]=i+1;
+        
+    }
+    for(i=0;i<n;i++)
+    {
+        pos=i;
+        for(j=i+1;j<n;j++)
+        {
+            if(bt[j]<bt[pos])
+                pos=j;
+        }
+        temp=bt[i];
+        bt[i]=bt[pos];
+        bt[pos]=temp;
+        temp=p[i];
+        p[i]=p[pos];
+        p[pos]=temp;
+    }
+    wt[0]=0;
+    for(i=1;i<n;i++)
+    {
+        wt[i]=0;
+        for(j=0;j<i;j++)
+        {
+            wt[i]+=bt[j];
+        }
+        total+=wt[i];
+    }
+    avg_wt=(float)total/n;
+    printf("Process Id \t BURST TIME \t WAITING TIME \t TURN AROUND TIME\n");
+    for(i=0;i<n;i++)
+    {
+        tat[i]=bt[i]+wt[i];
+        totalT+=tat[i];
+        printf("\np %d \t \t %d \t \t \t %d \t \t %d",p[i],bt[i],wt[i],tat[i]);
+    }
+    avg_tat=(float)totalT/n;
+    printf("\n");
+    printf("Avg. waiting time= %f \n",avg_wt);
+    printf("Avg. turnaround time= %f \n",avg_tat);
+}
