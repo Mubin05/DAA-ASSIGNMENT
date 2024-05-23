@@ -1,0 +1,508 @@
+1.)Python Program to implement STOP & WAIT ARQ Protocol
+
+
+num_frames = int(input("Number of frames to send: "))
+
+seqno = 1
+while seqno <= num_frames:
+    print(f"Frame {seqno}: SENT")
+
+    choice = int(input(""
+                       "Enter 1 to send ACK\n"
+                       "      2 to trigger TIMEOUT\n"
+                       "Choice: "))
+
+    if choice == 1:
+        # ACK received, send next frame
+        print(f"Frame {seqno}: ACK")
+        seqno += 1
+    elif choice == 2:
+        # TIMEOUT, resend current frame
+        print(f"Frame {seqno}: TIMEOUT")
+    else:
+        print("Invalid choice")
+        # Retry sending the current frame
+    # End of the switch case
+
+# End of the for loop
+
+print("Transmission complete")
+
+
+-----------------------------------------------------------------------------------------------------
+
+2.) GO Back N Sliding Protocol in python
+
+
+num_frames = int(input("Number of frames to send: "))
+window_size = int(input("Window size: "))
+
+# Sequence number of the oldest unacknowledged frame
+base = 1
+
+# No of frames acknowledged
+frames_acked = 0
+
+while base <= num_frames:
+    # Move the window by the number of frames acknowledged
+    base += frames_acked
+
+    # Send frames within the window size
+    for seqno in range(base, min(base + window_size, num_frames + 1)):
+        print(f"Frame {seqno}: SENT")
+
+    frames_acked = 0
+
+    # Simulate receiving ACKs or TIMEOUTs
+    for seqno in range(base, min(base + window_size, num_frames + 1)):
+        choice = int(input(f"Frame {seqno}: \n"
+                           "Enter 1 to send ACK\n"
+                           "      2 to trigger TIMEOUT\n"
+                           "Choice: "))
+
+        if choice == 1:
+            print(f"Frame {seqno}: ACK")
+            # Count the number of frames acknowledged
+            frames_acked += 1
+        elif choice == 2:
+            print(f"Frame {seqno}: TIMEOUT")
+            break
+        else:
+            print("Invalid choice")
+            # retry reception of the current frame
+            seqno -= 1
+
+print("Transmission complete")
+
+-----------------------------------------------------------------------------------------------------
+
+3.) SELECTIVE REPEAT PROTOCOL PROGRAM IN python
+
+MAX_SEQ_NUM = 100  # Maximum sequence number
+
+num_frames = int(input("Number of frames to send: "))
+window_size = int(input("Window size: "))
+
+# Initialize variables
+base = 1  # Sequence number of the oldest unacknowledged frame
+sent = [False] * (MAX_SEQ_NUM + 1)  # Array to track sent frames
+acked = [False] * (MAX_SEQ_NUM + 1)  # Array to track acknowledged frames
+
+while base <= num_frames:
+    # Send frames within the window size
+    for seqno in range(base, min(base + window_size, num_frames + 1)):
+        if not sent[seqno] or not acked[seqno]:
+            print(f"Frame {seqno}: SENT")
+            sent[seqno] = True
+
+    # Simulate receiving ACKs or TIMEOUTs
+    for seqno in range(base, min(base + window_size, num_frames + 1)):
+        if sent[seqno] and not acked[seqno]:
+            choice = int(input(f"Frame {seqno}: \n"
+                               "Enter 1 to send ACK\n"
+                               "      2 to trigger TIMEOUT\n"
+                               "Choice: "))
+
+            if choice == 1:
+                print(f"Frame {seqno}: ACK")
+                # Mark frame as acknowledged
+                acked[seqno] = True
+            elif choice == 2:
+                print(f"Frame {seqno}: TIMEOUT")
+            else:
+                print("Invalid choice")
+                # Retry reception of the current frame
+                seqno -= 1
+
+    # Slide the window
+    while acked[base] and base <= num_frames:
+        base += 1
+
+print("Transmission complete")
+
+-----------------------------------------------------------------------------------------------------
+
+4.) Sliding Window Protocol in python :-
+
+num_frames = int(input("Number of frames to send: "))
+window_size = int(input("Window size: "))
+
+# Sequence number of the oldest unacknowledged frame
+base = 1
+
+# No of frames acknowledged
+frames_acked = 0
+
+while base <= num_frames:
+    # Move the window by the number of frames acknowledged
+    base += frames_acked
+
+    # Send frames within the window size
+    for seqno in range(base, min(base + window_size, num_frames + 1)):
+        print(f"Frame {seqno}: SENT")
+
+    frames_acked = 0
+
+    # Simulate receiving ACKs or TIMEOUTs
+    for seqno in range(base, min(base + window_size, num_frames + 1)):
+        choice = int(input(f"Frame {seqno}: \n"
+                           "Enter 1 to send ACK\n"
+                           "      2 to trigger TIMEOUT\n"
+                           "Choice: "))
+
+        if choice == 1:
+            print(f"Frame {seqno}: ACK")
+            # Count the number of frames acknowledged
+            frames_acked += 1
+        elif choice == 2:
+            print(f"Frame {seqno}: TIMEOUT")
+            break
+        else:
+            print("Invalid choice")
+            # retry reception of the current frame
+            seqno -= 1
+
+print("Transmission complete")
+
+-----------------------------------------------------------------------------------------------------
+
+5.) CRC Algorithm in pyhton
+
+def bin_divide(num, divisor):
+    q, r = '', ''
+    n = len(divisor)
+    for i in range(len(num)):
+        # Division intermediate buffer
+        r += num[i]
+        # Division length is not reached
+        if len(r) < n: continue
+        # Quotient based on the first bit of division buffer
+        q += '1' if r[0] == '1' else '0'
+        # Calculate remainder using XOR operation
+        tmp = ''
+        tdiv = divisor if r[0] == '1' else '0' * n
+        for j in range(n):
+            tmp += '1' if (r[j] != tdiv[j]) else '0'
+        # Remove leading zeros while len(tmp) > n
+        while len(tmp) > n-1 and tmp[0] == '0':
+            tmp = tmp[1:]
+        r = tmp
+
+    return q, r
+
+
+def crc(data, divisor):
+    n = len(divisor)
+    crc_len = n - 1
+    padded_data = data + ('0' * crc_len)
+    q, r = bin_divide(padded_data, divisor)
+    # Pad leading zeros to the remainder
+    if len(r) < crc_len:
+        r = '0' * (crc_len - len(r)) + r
+    return r
+
+
+data = input("Binary data string (0s & 1s): ")
+divisor = input("Binary divisor string (0s & 1s): ")
+
+crc = crc(data, divisor)
+print("CRC:", crc)
+
+-----------------------------------------------------------------------------------------------------
+
+6.) Djikstra Algorithm in python :-
+
+import heapq
+
+def dijkstra(graph, start):
+    # Initialize distances dictionary with start vertex distance set to 0
+    distances = {vertex: float('inf') for vertex in graph}
+    distances[start] = 0
+
+    # Initialize priority queue with (distance, vertex)
+    minheap = [(0, start)]
+
+    while minheap:
+        curdist, curvert = heapq.heappop(minheap)
+
+        # Skip if current distance is greater than recorded distance
+        if curdist > distances[curvert]:
+            continue
+
+        for neighbor, weight in graph[curvert].items():
+            dist = curdist + weight
+            # Update distance if shorter path found
+            if dist < distances[neighbor]:
+                distances[neighbor] = dist
+                heapq.heappush(minheap, (dist, neighbor))
+
+    return distances
+----------------------------------------------------------------------------------------------------
+
+7.) Bellman Ford Algorithm in Python
+
+import heapq
+
+def bellman_ford(graph, start):
+    # Initialize distances dictionary with start vertex distance set to 0
+    distances = {vertex: float('inf') for vertex in graph}
+    distances[start] = 0
+
+    # Create a priority queue with (distance, vertex)
+    minheap = [(0, start)]
+
+    # Relax edges repeatedly
+    for _ in range(len(graph) - 1):
+        for current_vertex in graph:
+            for neighbor, weight in graph[current_vertex].items():
+                if distances[current_vertex] + weight < distances[neighbor]:
+                    distances[neighbor] = distances[current_vertex] + weight
+                    heapq.heappush(minheap, (distances[neighbor], neighbor))
+
+    # Check for negative cycles
+    for _ in range(len(graph)):
+        for current_vertex in graph:
+            for neighbor, weight in graph[current_vertex].items():
+                if distances[current_vertex] + weight < distances[neighbor]:
+                    raise ValueError("Graph contains negative cycle")
+
+    return distances
+
+----------------------------------------------------------------------------------------------------
+
+9.) TCP Server Client Implementation in python
+
+server.py
+
+import socket
+
+HOST = '0.0.0.0'
+PORT = 8080
+MAX_MSG_SIZE = 1024
+
+# create a socket object
+srv_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+srv_sock.bind((HOST, PORT))
+srv_sock.listen(3)
+
+# accept a connection
+cli_sock, client_address = srv_sock.accept()
+
+while True:
+    data = cli_sock.recv(MAX_MSG_SIZE)
+    if not data:
+        print("Client disconnected")
+        break
+
+    data = data.decode('utf-8')
+    print("Received:", data, end='')
+    if data[-1] != '\n': print()
+
+    cli_sock.send(data.encode('utf-8'))
+    print("Echoed back:", data, end='')
+    if data[-1] != '\n': print()
+
+cli_sock.close()
+srv_sock.close()
+
+
+client..py
+
+import socket
+
+HOST = 'localhost'
+PORT = 8080
+MAX_MSG_SIZE = 1024
+
+# Create a socket object
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# Connect to the server
+client_socket.connect((HOST, PORT))
+
+while True:
+    # Get user input
+    message = input("Send msg (or 'exit' to quit): ")
+    # Check for exit command
+    if message == 'exit': break
+    # Send the message to the server
+    client_socket.send(message.encode('utf-8'))
+    # Receive response from the server
+    data = client_socket.recv(MAX_MSG_SIZE)
+    # Print the echoed message from the server
+    print("Received:", data.decode('utf-8'))
+
+# Close the socket
+client_socket.close()
+
+
+----------------------------------------------------------------------------------------------------
+
+UDP_echo program in python
+
+client.py
+
+
+import socket
+
+HOST = 'localhost'
+PORT = 8080
+MAX_MSG_SIZE = 1024
+
+# Create a socket object
+cli_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+while True:
+    # Get user input
+    message = input("Enter message to send (or 'exit' to quit): ")
+    # Check for exit command
+    if message == 'exit': break
+    # Send the message to the server
+    cli_sock.sendto(message.encode('utf-8'), (HOST, PORT))
+    # Receive response from the server
+    data, _ = cli_sock.recvfrom(MAX_MSG_SIZE)
+    # Print the echoed message from the server
+    print("Received: ", data.decode('utf-8'))
+
+# Close the socket
+cli_sock.close()
+
+
+server.py
+
+import socket
+
+HOST = '0.0.0.0'
+PORT = 8080
+MAX_MSG_SIZE = 1024
+
+# create a socket object
+srv_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+srv_sock.bind((HOST, PORT))
+
+while True:
+    data, client_address = srv_sock.recvfrom(MAX_MSG_SIZE)
+    if not data:
+        print("Client disconnected")
+        break
+
+    data = data.decode('utf-8')
+    print("Received:", data, end='')
+    if data[-1] != '\n': print()
+
+    srv_sock.sendto(data.encode('utf-8'), client_address)
+    print("Echoed back:", data, end='')
+    if data[-1] != '\n': print()
+
+srv_sock.close()
+
+
+'''
+
+----------------------------------------------------------------------------------------------------
+
+UDP_BROADCAST in pyhton
+
+reciver.py
+
+import socket
+
+# Broadcast address and port
+PORT = 8080
+
+# Create a UDP socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.bind(('', PORT))
+
+# Receive data and print it
+print(f"Listening for messages on broadcast port {PORT}...")
+while True:
+    data, addr = sock.recvfrom(1024)
+    print(f"Received {addr}: {data.decode()}")
+
+# Close the socket
+sock.close()
+
+
+sender.py
+
+import socket
+
+# Broadcast address and port
+BROADCAST_ADDR = '255.255.255.255'
+PORT = 8080
+
+# Create a UDP socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+
+# Get data from terminal and send it over broadcast
+while True:
+    data = input("Send msg (or 'exit' to quit): ")
+    if data == 'exit': break
+    sock.sendto(data.encode(), (BROADCAST_ADDR, PORT))
+
+# Close the socket
+sock.close()
+
+
+----------------------------------------------------------------------------------------------------
+
+UDP_MULTICAST
+
+
+reciver.py
+
+import socket
+
+# Multicast address and port
+# Uses class D multicast address range
+MULTICAST_ADDR = "224.1.1.1"
+PORT = 8080
+
+# Create a UDP socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# Bind the socket to the multicast address and port
+sock.bind(('', PORT))
+
+# Set socket options to join multicast group
+mreq = socket.inet_aton(MULTICAST_ADDR) + socket.inet_aton('0.0.0.0')
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+
+# Receive data and print it
+print(f"Listening for messages on {MULTICAST_ADDR}:{PORT}...")
+while True:
+    data, addr = sock.recvfrom(1024)
+    print(f"Received {addr}: {data.decode()}")
+
+# Close the socket
+sock.close()
+
+
+
+sender.py
+
+
+import socket
+
+# Multicast address and port
+# Uses class D multicast address range
+MULTICAST_ADDR = "224.1.1.1"
+PORT = 8080
+
+# Create a UDP socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# Set the time-to-live for multicast packets (optional)
+# ttl = struct.pack('b', 1)
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 1)
+
+# Get data from terminal and send it over multicast
+while True:
+    data = input("Send msg (or 'exit' to quit): ")
+    if data == 'exit': break
+    sock.sendto(data.encode(), (MULTICAST_ADDR, PORT))
+
+# Close the socket
+sock.close()
